@@ -9,6 +9,9 @@ def mcd(a,b):
     else:
         return mcd(b, a%b)
 
+def mcm(a,b):
+    return (a*b/mcd(a,b))
+
 class Fraccion:
     def __init__(self, num, den):
         self.num = num
@@ -39,11 +42,11 @@ def suma(request):
     denominador1 = body['denominador1']
     numerador2 = body['numerador2']
     denominador2 = body['denominador2']
-    dr = denominador1*denominador2
-    nr1 = numerador1*denominador2
-    nr2 = numerador2*denominador1
+    dr = mcm(denominador1, denominador2)
+    nr1 = numerador1*(dr/denominador1)
+    nr2 = numerador2*(dr/denominador2)
     nr = nr1 + nr2
-    resultado = Fraccion(nr,dr)
+    resultado = Fraccion(int(nr),int(dr))
     resultado_json = resultado.toJSON()
     return HttpResponse(resultado_json, content_type = "text/json-comment-filtered")
 
@@ -57,7 +60,7 @@ def multiplicacion(request):
     denominador2 = body['denominador2']
     dr = denominador1*denominador2
     nr = numerador1*numerador2
-    resultado = Fraccion(nr,dr)
+    resultado = Fraccion(int(nr),int(dr))
     resultado_json = resultado.toJSON()
     return HttpResponse(resultado_json, content_type = "text/json-comment-filtered")
 
@@ -71,7 +74,7 @@ def division(request):
     denominador2 = body['denominador2']
     dr = denominador1*numerador2
     nr = numerador1*denominador2
-    resultado = Fraccion(nr,dr)
+    resultado = Fraccion(int(nr),int(dr))
     resultado_json = resultado.toJSON()
     return HttpResponse(resultado_json, content_type = "text/json-comment-filtered")
 
@@ -83,10 +86,10 @@ def resta(request):
     denominador1 = body['denominador1']
     numerador2 = body['numerador2']
     denominador2 = body['denominador2']
-    dr = denominador1*denominador2
-    nr1 = numerador1*denominador2
-    nr2 = numerador2*denominador1
+    dr = mcm(denominador1, denominador2)
+    nr1 = numerador1*(dr/denominador1)
+    nr2 = numerador2*(dr/denominador2)
     nr = nr1 - nr2
-    resultado = Fraccion(nr,dr)
+    resultado = Fraccion(int(nr),int(dr))
     resultado_json = resultado.toJSON()
     return HttpResponse(resultado_json, content_type = "text/json-comment-filtered")
