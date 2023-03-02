@@ -3,12 +3,23 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from json import loads,dumps
 
+def mcd(a,b):
+    if (b == 0): 
+        return a
+    else:
+        return mcd(b, a%b)
+
 class Fraccion:
     def __init__(self, num, den):
         self.num = num
         self.den = den
     def toJSON(self):
         return dumps(self, default=lambda o:o.__dict__, sort_keys=False, indent=4)
+    def simplificar(self):
+        x = mcd(self.num, self.den)
+        f = Fraccion(int(self.num/x), int(self.den/x))
+        return f
+    
 # Create your views here.
 def index(request):
     #return HttpResponse('<h1> Bienvenidos a la sesión del jueves!</h1>')
