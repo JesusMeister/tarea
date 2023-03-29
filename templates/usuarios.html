@@ -1,0 +1,25 @@
+{% load static %}
+<link href="{% static 'estilos.css' %}", rel="stylesheet"/>
+<html>
+    <body>
+    <head>
+        <h1>Tabla de usuarios</h1>
+        <table>
+            <thead>
+            <tr>
+            <th>ID</th>
+            <th>Password</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for i in data %}
+            <tr>
+            <td>{{ i.0 }}</td>
+            <td>{{ i.1 }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </head>
+    </body>
+</html>
