@@ -29,7 +29,7 @@ def usuarios(request):
         cur = con.cursor()
         res = cur.execute("INSERT INTO usuarios (password) VALUES (?)", (password,))
         con.commit()
-        return HttpResponse(password)
+        return HttpResponse("Creado nuevo usuario con contraseña: "+password)
     
     elif (request.method=='DELETE'):
         body = request.body.decode('UTF-8')
@@ -41,8 +41,9 @@ def usuarios(request):
         flag = flag.fetchall()
         if (bool(flag)):
             res = cur.execute("DELETE FROM usuarios WHERE id=?", (str(id),))
+            res = cur.execute("DELETE FROM partidas WHERE id_usuario=?", (str(id),))
             con.commit()
-            return HttpResponse(id)
+            return HttpResponse("Usuario "+id+" eliminado")
         else:
             return HttpResponse("ID NO EXISTENTE")
 
@@ -58,7 +59,7 @@ def usuarios(request):
         if (bool(flag)):
             res = cur.execute("UPDATE usuarios SET password=? WHERE id=?", (password, str(id),))
             con.commit()
-            return HttpResponse(str(id), password)
+            return HttpResponse("Nuevos datos de usuraio "+str(id)+": "+password)
         else:
             return HttpResponse("EL ID INGRESADO NO ES VALIDO")        
 
@@ -88,7 +89,7 @@ def partidas(request):
         if (bool(flag)):
             res = cur.execute("INSERT INTO partidas (fecha, id_usuario, minutos_jugados, puntaje) VALUES (?, ?, ?, ?)", (fecha, id_usuario, minutos_jugados, puntaje,))
             con.commit()
-            return HttpResponse(fecha+" "+str(id_usuario)+" "+str(minutos_jugados)+" "+str(puntaje))
+            return HttpResponse("Nueva partida: "+fecha+" "+str(id_usuario)+" "+str(minutos_jugados)+" "+str(puntaje))
         else:
             return HttpResponse("El id de usuario no existe")
     
@@ -103,7 +104,7 @@ def partidas(request):
         if (bool(flag)):
             res = cur.execute("DELETE FROM partidas WHERE id=?", (str(id),))
             con.commit()
-            return HttpResponse(id)
+            return HttpResponse("Parida "+id+" borrada")
         else:
             return HttpResponse("ID invalido")
     
@@ -126,6 +127,6 @@ def partidas(request):
         if (bool(flag) and bool(flag2)):
             res = cur.execute("UPDATE partidas SET fecha=?, id_usuario=?, minutos_jugados=?, puntaje=? WHERE id=?", (fecha, str(id_usuario), str(minutos_jugados), str(puntaje), str(id),))
             con.commit()
-            return HttpResponse(str(id)+" "+fecha+" "+str(id_usuario)+" "+str(minutos_jugados)+" "+str(puntaje))
+            return HttpResponse("Partida "+str(id)+" actualizada con: "+fecha+" "+str(id_usuario)+" "+str(minutos_jugados)+" "+str(puntaje))
         else:
             return HttpResponse("INPUTS NO VALIDOS")
