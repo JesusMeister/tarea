@@ -6,7 +6,6 @@ import sqlite3
    
 # Create your views here.
 def index(request):
-    #return HttpResponse('<h1> Bienvenidos a la sesión del jueves!</h1>')
     return render(request, 'index.html')
 
 
@@ -43,7 +42,7 @@ def usuarios(request):
             res = cur.execute("DELETE FROM usuarios WHERE id=?", (str(id),))
             res = cur.execute("DELETE FROM partidas WHERE id_usuario=?", (str(id),))
             con.commit()
-            return HttpResponse("Usuario "+id+" eliminado")
+            return HttpResponse("Usuario "+str(id)+" eliminado")
         else:
             return HttpResponse("ID NO EXISTENTE")
 
@@ -104,7 +103,7 @@ def partidas(request):
         if (bool(flag)):
             res = cur.execute("DELETE FROM partidas WHERE id=?", (str(id),))
             con.commit()
-            return HttpResponse("Parida "+id+" borrada")
+            return HttpResponse("Parida "+str(id)+" borrada")
         else:
             return HttpResponse("ID invalido")
     
