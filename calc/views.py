@@ -139,11 +139,9 @@ def json(request):
     id = eljson['id']
     con = sqlite3.connect("db.sqlite3")
     cur = con.cursor()
-    cur.execute("SELECT * FROM partidas WHERE id=?", (str(id),))
+    cur.execute("SELECT * FROM Partida WHERE estudiante=?", (str(id),))
     lista = cur.fetchall()
     nombres = [a[0] for a in cur.description]
-    print(lista)
-    print(nombres)
     diccionario = [dict(zip(nombres, fila)) for fila in lista]
     return JsonResponse(diccionario, safe=False)
 
@@ -153,5 +151,4 @@ def grafica(request):
     data = {"id":1} # el cuerpo de la peticion
     response = requests.post(url, json=data) # hacer la peticion POST
     x = response.json()
-    print(x) 
     return render(request, 'grafica.html', {'data':x})
