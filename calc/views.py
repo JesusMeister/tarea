@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 from json import loads,dumps
 import sqlite3 
-   
+import requests
+
 # Create your views here.
 def index(request):
     return render(request, 'index.html')
@@ -71,7 +73,6 @@ def partidas(request):
         cur = con.cursor()
         res = cur.execute("SELECT * FROM partidas")
         resultados = res.fetchall()
-        print(resultados)
         return render(request, 'partidas.html', {'data':resultados})
     
     elif (request.method=='POST'):
@@ -129,3 +130,28 @@ def partidas(request):
             return HttpResponse("Partida "+str(id)+" actualizada con: "+fecha+" "+str(id_usuario)+" "+str(minutos_jugados)+" "+str(puntaje))
         else:
             return HttpResponse("INPUTS NO VALIDOS")
+        
+
+@csrf_exempt
+def json(request):
+    body = request.body.decode('UTF-8')
+    eljson = loads(body)
+    id = eljson['id']
+    con = sqlite3.connect("db.sqlite3")
+    cur = con.cursor()
+    cur.execute("SELECT * FROM partidas WHERE id=?", (str(id),))
+    lista = cur.fetchall()
+    nombres = [a[0] for a in cur.description]
+    print(lista)
+    print(nombres)
+    diccionario = [dict(zip(nombres, fila)) for fila in lista]
+    return JsonResponse(diccionario, safe=False)
+
+@csrf_exempt
+def grafica(request):
+    url = "http://127.0.0.1:8000/json"
+    data = {"id":1} # el cuerpo de la peticion
+    response = requests.post(url, json=data) # hacer la peticion POST
+    x = response.json()
+    print(x) 
+    return render(request, 'grafica.html', {'data':x})
